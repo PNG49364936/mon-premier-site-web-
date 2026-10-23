@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pierre-Noël Gauthier — Portfolio</title>
+  <meta name="description" content="Pierre-Noël Gauthier — 25 ans d'opérations aéroportuaires chez Air France-KLM, ancien Directeur Ground Services & Security Afrique.">
+
+  <!-- Polices : Instrument Serif (titres élégants), Martian Mono (style tableau d'aéroport), Hanken Grotesk (texte courant) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@400;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========== 1. COULEURS : on les définit une seule fois ici ========== */
+    :root {
+      --nuit: #0d1117;        /* fond principal, bleu nuit de piste */
+      --panneau: #161b22;     /* fond du tableau des départs */
+      --case: #1f2630;        /* une case de lettre du tableau */
+      --ambre: #ffb627;       /* jaune-orangé des panneaux d'aéroport */
+      --creme: #f3ecdc;       /* texte clair sur fond bleu */
+      --papier: #e6eefa;      /* papier bleuté de la carte d'embarquement */
+      --bleu: #1f5fbf;        /* bleu de la carte d'embarquement */
+      --bleu-pale: #5b7ba6;   /* petits libellés bleu-gris */
+      --encre: #1a1a1a;
+      --gris: #8b949e;
+      --vert: #3ddc84;        /* statut "à l'heure" */
+      --ligne: rgba(255, 255, 255, .08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--nuit);
+      color: #e6edf3;
+      font-family: "Hanken Grotesk", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      /* Fond : lignes de balisage de piste très discrètes */
+      background-image:
+        radial-gradient(circle at 80% -10%, rgba(255,182,39,.12), transparent 45%),
+        repeating-linear-gradient(90deg, transparent 0 119px, var(--ligne) 119px 120px);
+    }
+
+    /* Grain léger par-dessus tout pour un rendu "matière" */
+    body::after {
+      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .mono { font-family: "Martian Mono", monospace; }
+
+    /* ========== 2. EN-TÊTE ========== */
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 0; font-family: "Martian Mono", monospace; font-size: 12px;
+      color: var(--gris); letter-spacing: .1em;
+    }
+    header .logo { color: var(--ambre); font-weight: 600; }
+    header nav a { color: var(--gris); text-decoration: none; margin-left: 24px; transition: color .2s; }
+    header nav a:hover { color: var(--ambre); }
+
+    /* ========== 3. HERO : grand titre + carte d'embarquement ========== */
+    .hero {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px;
+      align-items: center; padding: 60px 0 100px;
+    }
+    .kicker {
+      font-family: "Martian Mono", monospace; font-size: 12px; color: var(--ambre);
+      letter-spacing: .2em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .kicker::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--vert); box-shadow: 0 0 12px var(--vert); animation: pulse 2s infinite; }
+    @keyframes pulse { 50% { opacity: .3; } }
+
+    h1 {
+      font-family: "Instrument Serif", serif; font-weight: 400;
+      font-size: clamp(56px, 9vw, 112px); line-height: .92; margin: 20px 0 28px;
+      letter-spacing: -.02em;
+    }
+    h1 em { color: var(--ambre); }
+    .hero p.lead { font-size: 19px; color: #c9d1d9; max-width: 520px; }
+    .hero p.lead strong { color: #fff; font-weight: 600; }
+
+    /* Lettres "split-flap" : chaque lettre est une petite case */
+    .flap { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 32px; }
+    .flap .word { display: flex; gap: 3px; }
+    .flap .word span {
+      font-family: "Martian Mono", monospace; font-weight: 600; font-size: 14px;
+      width: 22px; height: 30px; display: grid; place-items: center;
+      background: var(--case); color: var(--ambre); border-radius: 3px;
+      position: relative; box-shadow: inset 0 -1px 0 rgba(0,0,0,.5);
+    }
+    .flap .word span::after { /* la fente horizontale au milieu de chaque case */
+      content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.6);
+    }
+
+    /* Carte d'embarquement */
+    .pass {
+      background: var(--papier); color: #0b2447; border-radius: 18px;
+      display: grid; grid-template-columns: 1fr 90px; overflow: hidden;
+      transform: rotate(3deg); box-shadow: 0 40px 80px -20px rgba(0,0,0,.7);
+      transition: transform .5s cubic-bezier(.2,.8,.2,1);
+      animation: drop 1s .3s both cubic-bezier(.2,.8,.2,1);
+    }
+    .pass:hover { transform: rotate(0deg) scale(1.02); }
+    @keyframes drop { from { opacity: 0; transform: translateY(-40px) rotate(-6deg); } }
+
+    .pass-main { padding: 26px; }
+    .pass-top {
+      display: flex; justify-content: space-between; font-family: "Martian Mono", monospace;
+      font-size: 10px; letter-spacing: .15em; color: var(--bleu-pale); padding-bottom: 16px;
+      border-bottom: 1px dashed #b4c6e0;
+    }
+    .route { display: flex; align-items: center; justify-content: space-between; margin: 22px 0; }
+    .route .code { font-family: "Instrument Serif", serif; font-size: 54px; line-height: 1; }
+    .route small { display: block; font-family: "Martian Mono", monospace; font-size: 9px; letter-spacing: .1em; color: var(--bleu-pale); }
+    .route .plane { flex: 1; margin: 0 14px; border-top: 2px dotted #9fb4d4; position: relative; }
+    .route .plane::after { content: "✈"; position: absolute; left: 50%; top: -15px; transform: translateX(-50%); font-size: 20px; color: var(--bleu); }
+    .pass-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .pass-grid div { font-family: "Martian Mono", monospace; font-size: 9px; letter-spacing: .1em; color: var(--bleu-pale); }
+    .pass-grid b { display: block; font-size: 13px; color: #0b2447; margin-top: 4px; letter-spacing: 0; }
+
+    .pass-stub {
+      background: var(--bleu); color: var(--papier); border-left: 2px dashed var(--papier);
+      writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center;
+      font-family: "Martian Mono", monospace; font-size: 11px; letter-spacing: .3em; gap: 14px;
+    }
+    .pass-stub .barcode {
+      width: 34px; height: 120px;
+      background: repeating-linear-gradient(0deg, var(--papier) 0 2px, transparent 2px 4px, var(--papier) 4px 5px, transparent 5px 8px);
+    }
+
+    /* ========== 4. CHIFFRES CLÉS ========== */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--ligne); border-bottom: 1px solid var(--ligne);
+    }
+    .stat { padding: 36px 24px; border-right: 1px solid var(--ligne); }
+    .stat:last-child { border-right: 0; }
+    .stat .num { font-family: "Instrument Serif", serif; font-size: 64px; line-height: 1; color: var(--ambre); }
+    .stat .lbl { font-family: "Martian Mono", monospace; font-size: 11px; letter-spacing: .1em; color: var(--gris); text-transform: uppercase; margin-top: 8px; }
+
+    /* ========== 5. SECTIONS ========== */
+    section { padding: 110px 0 0; }
+    .sec-title { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+    .sec-title .n { font-family: "Martian Mono", monospace; font-size: 12px; color: var(--ambre); }
+    .sec-title h2 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: clamp(40px, 6vw, 64px); line-height: 1; }
+    .sec-title h2 em { color: var(--ambre); }
+
+    /* Tableau des départs = parcours professionnel */
+    .board {
+      background: var(--panneau); border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--ligne); box-shadow: 0 30px 60px -30px rgba(0,0,0,.8);
+    }
+    .board-head, .row {
+      display: grid; grid-template-columns: 110px 90px 1fr 170px 140px;
+      gap: 16px; padding: 18px 24px; align-items: center;
+    }
+    .board-head {
+      background: #0a0d12; font-family: "Martian Mono", monospace; font-size: 10px;
+      letter-spacing: .15em; color: var(--gris); text-transform: uppercase;
+    }
+    .row {
+      border-top: 1px solid var(--ligne); transition: background .25s;
+      opacity: 0; transform: translateX(-20px);
+    }
+    .row.visible { opacity: 1; transform: none; transition: opacity .6s, transform .6s, background .25s; }
+    .row:hover { background: rgba(255,182,39,.06); }
+    .row .yr { font-family: "Martian Mono", monospace; font-size: 13px; color: #fff; }
+    .row .iata {
+      font-family: "Martian Mono", monospace; font-weight: 600; font-size: 15px; color: var(--ambre);
+      background: var(--case); padding: 4px 8px; border-radius: 4px; text-align: center; letter-spacing: .1em;
+    }
+    .row .role b { display: block; font-weight: 600; color: #fff; }
+    .row .role span { font-size: 14px; color: var(--gris); }
+    .row .city { font-family: "Martian Mono", monospace; font-size: 12px; color: #c9d1d9; text-transform: uppercase; }
+    .status { font-family: "Martian Mono", monospace; font-size: 11px; letter-spacing: .1em; display: flex; align-items: center; gap: 8px; }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status.done { color: var(--gris); }
+    .status.live { color: var(--vert); }
+    .status.live::before { box-shadow: 0 0 10px var(--vert); animation: pulse 1.5s infinite; }
+
+    /* Expertises */
+    .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .skill {
+      border: 1px solid var(--ligne); border-radius: 14px; padding: 28px 24px 32px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), transparent);
+      transition: border-color .3s, transform .3s;
+    }
+    .skill:hover { border-color: var(--ambre); transform: translateY(-6px); }
+    .skill .ico { font-size: 28px; margin-bottom: 40px; display: block; }
+    .skill h3 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 28px; line-height: 1.1; margin-bottom: 10px; }
+    .skill p { font-size: 15px; color: var(--gris); }
+
+    /* Contact */
+    .contact {
+      margin: 110px 0 60px; padding: 70px 40px; border-radius: 24px; text-align: center;
+      background: var(--bleu); color: var(--papier); position: relative; overflow: hidden;
+    }
+    .contact::before { /* grand avion décoratif en filigrane */
+      content: "✈"; position: absolute; font-size: 380px; right: -60px; bottom: -150px;
+      opacity: .1; transform: rotate(-20deg);
+    }
+    .contact h2 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: clamp(42px, 7vw, 80px); line-height: 1; }
+    .contact p { max-width: 520px; margin: 18px auto 32px; font-size: 18px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+      background: var(--papier); color: #0b2447; padding: 18px 30px; border-radius: 100px;
+      font-family: "Martian Mono", monospace; font-size: 13px; letter-spacing: .08em;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+
+    footer { padding: 0 0 40px; font-family: "Martian Mono", monospace; font-size: 11px; color: var(--gris); text-align: center; letter-spacing: .1em; }
+
+    /* Apparition en cascade au chargement */
+    .reveal { animation: up .9s both cubic-bezier(.2,.8,.2,1); }
+    .d1 { animation-delay: .1s; } .d2 { animation-delay: .25s; } .d3 { animation-delay: .4s; } .d4 { animation-delay: .55s; }
+    @keyframes up { from { opacity: 0; transform: translateY(24px); } }
+
+    /* ========== 6. VERSION MOBILE ========== */
+    @media (max-width: 860px) {
+      header nav { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 30px 0 70px; }
+      .pass { transform: rotate(0); }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--ligne); }
+      .board-head { display: none; }
+      .row { grid-template-columns: 70px 1fr; gap: 6px 14px; }
+      .row .yr { grid-column: 2; grid-row: 1; }
+      .row .iata { grid-row: 1 / span 3; align-self: start; }
+      .row .role, .row .city, .row .status { grid-column: 2; }
+      .skills { grid-template-columns: 1fr 1fr; }
+      .contact { padding: 50px 22px; }
+    }
+    @media (max-width: 480px) {
+      .skills { grid-template-columns: 1fr; }
+      .route .code { font-size: 40px; }
+      .flap .word span { width: 18px; height: 26px; font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .row { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <span class="logo">PNG ✈</span>
+      <nav>
+        <a href="#parcours">Parcours</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div>
+        <div class="kicker reveal">Ouvert à de nouvelles opportunités</div>
+        <h1 class="reveal d1">Pierre-Noël<br><em>Gauthier</em></h1>
+        <p class="lead reveal d2">
+          <strong>Près de 25 ans d'opérations aéroportuaires</strong> chez Air France-KLM,
+          dont 15 ans d'expatriation en Europe, en Russie/CEI et en Afrique.
+          Aujourd'hui, je me forme aussi au développement web.
+        </p>
+        <!-- Le texte ci-dessous est animé par le JavaScript en bas de page -->
+        <div class="flap reveal d3" id="flap" aria-label="Ground Services & Security"></div>
+      </div>
+
+      <div class="pass" aria-hidden="true">
+        <div class="pass-main">
+          <div class="pass-top"><span>BOARDING PASS</span><span>AF · KL</span></div>
+          <div class="route">
+            <div><span class="code">CDG</span><small>1996</small></div>
+            <div class="plane"></div>
+            <div style="text-align:right"><span class="code">LBV</span><small>2020</small></div>
+          </div>
+          <div class="pass-grid">
+            <div>PASSAGER<b>GAUTHIER P.N.</b></div>
+            <div>ESCALES<b>50+</b></div>
+            <div>CLASSE<b>DIRECTOR</b></div>
+            <div>RÉGIONS<b>EU · CIS · AF</b></div>
+            <div>ANNÉES<b>~25</b></div>
+            <div>PORTE<b>WEB DEV</b></div>
+          </div>
+        </div>
+        <div class="pass-stub"><span>GROUND OPS</span><div class="barcode"></div></div>
+      </div>
+    </div>
+
+    <!-- CHIFFRES -->
+    <div class="stats">
+      <div class="stat"><div class="num">25</div><div class="lbl">ans chez Air France-KLM</div></div>
+      <div class="stat"><div class="num">15</div><div class="lbl">ans d'expatriation</div></div>
+      <div class="stat"><div class="num">50+</div><div class="lbl">escales pilotées</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">continents</div></div>
+    </div>
+
+    <!-- PARCOURS -->
+    <section id="parcours">
+      <div class="sec-title"><span class="n">01 —</span><h2>Mon <em>parcours</em></h2></div>
+
+      <div class="board">
+        <div class="board-head"><span>Période</span><span>Escale</span><span>Fonction</span><span>Ville</span><span>Statut</span></div>
+
+        <div class="row">
+          <span class="yr">2021 →</span><span class="iata">WEB</span>
+          <div class="role"><b>Apprentissage du développement web</b><span>Freelance · Ruby on Rails</span></div>
+          <span class="city">Clichy</span><span class="status live">En cours</span>
+        </div>
+        <div class="row">
+          <span class="yr">2017–20</span><span class="iata">CDG</span>
+          <div class="role"><b>Director Ground Services & Security — Afrique</b><span>Air France-KLM · 50+ escales</span></div>
+          <span class="city">Roissy</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">2017–18</span><span class="iata">CDG</span>
+          <div class="role"><b>Outstations Area Manager</b><span>Air France-KLM · Siège CDG</span></div>
+          <span class="city">Roissy</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">2013–17</span><span class="iata">LBV</span>
+          <div class="role"><b>Regional Stations Manager — Afrique centrale</b><span>Air France</span></div>
+          <span class="city">Libreville</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">2009–13</span><span class="iata">SVO</span>
+          <div class="role"><b>Regional Station Manager — Russie & CEI</b><span>Opérations Moscou-SVO et escales AFKL</span></div>
+          <span class="city">Moscou</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">2005–09</span><span class="iata">FCO</span>
+          <div class="role"><b>Regional Station Manager — Italie</b><span>Air France-KLM</span></div>
+          <span class="city">Rome</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">2002–05</span><span class="iata">MAD</span>
+          <div class="role"><b>Regional Station Manager — Espagne & Portugal</b><span>Air France-KLM</span></div>
+          <span class="city">Madrid</span><span class="status done">Arrivé</span>
+        </div>
+        <div class="row">
+          <span class="yr">1996–02</span><span class="iata">CDG</span>
+          <div class="role"><b>Out-stations Area Manager — Europe</b><span>Air France</span></div>
+          <span class="city">Paris</span><span class="status done">Arrivé</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERTISE -->
+    <section id="expertise">
+      <div class="sec-title"><span class="n">02 —</span><h2>Mon <em>expertise</em></h2></div>
+      <div class="skills">
+        <div class="skill"><span class="ico">🛫</span><h3>Opérations sol</h3><p>Pilotage d'escales et management de stations, plus de 50 escales à la fois.</p></div>
+        <div class="skill"><span class="ico">🛡️</span><h3>Sûreté aérienne</h3><p>Mise en œuvre et contrôle des standards de sûreté sur un réseau international.</p></div>
+        <div class="skill"><span class="ico">👥</span><h3>Leadership</h3><p>Management d'équipes multiculturelles et formation, dans des contextes exigeants.</p></div>
+        <div class="skill"><span class="ico">📊</span><h3>Budget & achats</h3><p>Gestion budgétaire, achats et négociation des contrats d'assistance en escale.</p></div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <div class="contact" id="contact">
+      <h2>Prochain vol ?</h2>
+      <p>Échangeons sur une mission, un conseil en opérations aéroportuaires ou un projet.</p>
+      <a class="btn" href="https://www.linkedin.com/in/pierre-noel-gauthier-3247415b" target="_blank" rel="noopener">Me contacter sur LinkedIn →</a>
+    </div>
+
+    <footer>© 2026 Pierre-Noël Gauthier · Paris</footer>
+  </div>
+
+  <script>
+    // 1) Effet "tableau d'aéroport" : chaque lettre défile au hasard avant de se fixer
+    const text = "GROUND SERVICES & SECURITY";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ&";
+    const flap = document.getElementById("flap");
+
+    let i = 0;
+    text.split(" ").forEach(mot => {
+      const word = document.createElement("div"); // un mot = un bloc qui ne se coupe pas
+      word.className = "word";
+      flap.appendChild(word);
+      [...mot].forEach(letter => { animer(word, letter, i++); });
+    });
+
+    function animer(word, letter, i) {
+      const box = document.createElement("span");
+      word.appendChild(box);
+      let tours = 0;
+      const maxTours = 8 + i * 2; // les lettres de droite se fixent plus tard
+      const timer = setInterval(() => {
+        box.textContent = chars[Math.floor(Math.random() * chars.length)];
+        if (++tours >= maxTours) { box.textContent = letter; clearInterval(timer); }
+      }, 50);
+    }
+
+    // 2) Les lignes du tableau apparaissent une par une quand on fait défiler la page
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const rows = [...document.querySelectorAll(".row")];
+        entry.target.style.transitionDelay = (rows.indexOf(entry.target) % 8) * 0.08 + "s";
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll(".row").forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>
